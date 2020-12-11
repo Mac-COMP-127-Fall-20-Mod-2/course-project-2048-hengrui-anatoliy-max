@@ -4,7 +4,11 @@
         ".vscode": true,
         "**/.gitkeep": true,
         "bin": true,
-        "build": true
+        "build": true,
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
     },
     "java.configuration.updateBuildConfiguration": "automatic"
 }
