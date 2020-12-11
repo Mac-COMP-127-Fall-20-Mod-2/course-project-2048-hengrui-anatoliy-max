@@ -1,26 +1,8 @@
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import edu.macalester.graphics.GraphicsGroup;
 
-public class GameBoard extends GraphicsGroup implements KeyListener{
+public class GameBoard extends GraphicsGroup{
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-    }
 
 }
