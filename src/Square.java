@@ -21,11 +21,12 @@ public class Square extends GraphicsGroup {
     private Color color;
     private double x;
     private double y;
-
-    public Square(double x, double y, int value) {
+    private SquareManager squareManager;
+    public Square(double x, double y, int value,SquareManager squareManager) {
         this.x = x;
         this.y = y;
         this.value = value;
+        this.squareManager= squareManager;
 
         if (value == 2) {
             this.color = BEIGE_COLOR;
@@ -78,22 +79,40 @@ public class Square extends GraphicsGroup {
     }
 
     public void move(String direction) {
-        if(direction.equals("Up")&&y>60) {
+        if(direction.equals("Up")&&y>60&&squareManager.getElementAt(x,y-140)==null) {
             y=y-140;
             this.setCenter(x+50,y+50);
-        }
-        else if(direction.equals("Down")&&y<=340) {
+            move("Up");
+        } 
+        else if(direction.equals("Down")&&y<=340&&squareManager.getElementAt(x,y+140)==null) {
             y=y+140;
             this.setCenter(x+50,y+50);
+            move("Down");
         }
-        else if(direction.equals("Left")&&x>40) {
+        else if(direction.equals("Left")&&x>40&&squareManager.getElementAt(x-140,y)==null) {
             x=x-140;
             this.setCenter(x+50,y+50);
+            move("Left");
         }
-        else if(direction.equals("Right")&&x<=320) {
+        else if(direction.equals("Right")&&x<=320&&squareManager.getElementAt(x+140,y)==null) {
             x=x+140;
             this.setCenter(x+50,y+50);
+            move("Right");
+        }
+        else{
+            //if can merge
+            //merge
         }
     }
 
+    public void merge(){
+
+    }
+    private int getValue() {
+        return value;
+    }
+
+    private void doubleValue() {
+        this.value = value * 2;
+    }
 }

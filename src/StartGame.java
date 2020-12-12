@@ -15,13 +15,17 @@ import edu.macalester.graphics.events.Key;
      private CanvasWindow canvas;
      private Square square;
      private Background background;
+     SquareManager squareManager;
 
      public StartGame() {
         canvas = new CanvasWindow("2048", CANVAS_WIDTH, CANVAS_HEIGHT);
         background = new Background(canvas); 
         canvas.add(background);
-        square = new Square(40, 461, 2048);
-        canvas.add(square);
+        squareManager = new SquareManager(canvas);
+        canvas.add(squareManager);
+        
+        // square = new Square(40, 461, 8);
+        // canvas.add(square);
      }
 
     public static void main(String[] args) {
@@ -30,20 +34,25 @@ import edu.macalester.graphics.events.Key;
     }
 
     public void run() {
+        squareManager.generate();
         canvas.draw();
 
         canvas.onKeyDown(event -> {
             if(canvas.getKeysPressed().contains(Key.UP_ARROW)) {  
-            square.move("Up");
+            squareManager.move("Up");
+            squareManager.generate();
             canvas.draw();
         } else if (canvas.getKeysPressed().contains(Key.DOWN_ARROW)) {
-            square.move("Down");
+            squareManager.move("Down");
+            squareManager.generate();
             canvas.draw();
         } else if (canvas.getKeysPressed().contains(Key.RIGHT_ARROW)) {
-            square.move("Right");
+            squareManager.move("Right");
+            squareManager.generate();
             canvas.draw();
         } else if (canvas.getKeysPressed().contains(Key.LEFT_ARROW)) {
-            square.move("Left");
+            squareManager.move("Left");
+            squareManager.generate();
             canvas.draw();
         }
         });
