@@ -16,7 +16,7 @@ public class Background extends GraphicsGroup {
         this.canvas= canvas;
         this.margin = 40;
         this.x = margin;
-        this.y = canvas.getHeight()*0.1;
+        this.y = canvas.getHeight()*0.068;
         this.draw();    
     }
     public void draw() {

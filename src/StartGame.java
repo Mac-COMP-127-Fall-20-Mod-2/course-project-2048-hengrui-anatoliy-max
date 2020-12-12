@@ -8,8 +8,6 @@
 import edu.macalester.graphics.*;
 import edu.macalester.graphics.events.Key;
 
-import java.awt.Color;
-
  public class StartGame {
      private static final int CANVAS_WIDTH = 600;
      private static final int CANVAS_HEIGHT = 600;
@@ -22,7 +20,7 @@ import java.awt.Color;
         canvas = new CanvasWindow("2048", CANVAS_WIDTH, CANVAS_HEIGHT);
         background = new Background(canvas); 
         canvas.add(background);
-        square = new Square(40,480,Color.orange,2);
+        square = new Square(40, 461, 2048);
         canvas.add(square);
      }
 
