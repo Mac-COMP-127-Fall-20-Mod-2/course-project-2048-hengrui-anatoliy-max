@@ -5,6 +5,9 @@ import edu.macalester.graphics.GraphicsGroup;
 import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.Rectangle;
 
+/**
+ * Represents a square that can be combined with other squares to reach the fabled 2048.
+ */
 public class Square extends GraphicsGroup {
 
     public static final int WIDTH = 100;
@@ -22,6 +25,12 @@ public class Square extends GraphicsGroup {
     private double x;
     private double y;
     private SquareManager squareManager;
+
+
+    /**
+     * Constructs a square from an x and y position, a value to be displayed, and a square manager
+     * to hold multiple squares. The square's color is determined based on its value.
+     */
     public Square(double x, double y, int value,SquareManager squareManager) {
         this.x = x;
         this.y = y;
@@ -49,10 +58,13 @@ public class Square extends GraphicsGroup {
         if(value >= 128) {
             this.color = GOLD_COLOR;
         }
-
         createBoxDrawing();
     }
 
+    /**
+     * Creates a rectangle and number value based on the square's held value to graphically represent
+     * the box. The number's position stays centered no matter its value.
+     */
     private void createBoxDrawing() {
         Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
         rectangle.setFillColor(color);
@@ -71,13 +83,16 @@ public class Square extends GraphicsGroup {
         else {
             text.setPosition(rectangle.getX() + 18, rectangle.getY() + 57);
         }
-
-
         text.setFont(FontStyle.BOLD, 25);
         add(rectangle);
         add(text);
     }
 
+
+    /**
+     * Allows for the square to move. Takes an input direction as a string and moves as far as it can
+     * within the bounds of the board and other squares.
+     */
     public void move(String direction) {
         if(direction.equals("Up")&&y>60&&squareManager.getElementAt(x,y-140)==null) {
             y=y-140;
@@ -105,13 +120,23 @@ public class Square extends GraphicsGroup {
         }
     }
 
+    /**
+     * Allows squares to merge with squares that they come into contact with.
+     */
     public void merge(){
 
     }
+
+    /**
+     * Returns the given square's value.
+     */
     private int getValue() {
         return value;
     }
 
+    /**
+     * To be used when merging squares, makes the dominant square's value double.
+     */
     private void doubleValue() {
         this.value = value * 2;
     }

@@ -4,14 +4,21 @@ import edu.macalester.graphics.Rectangle;
 
 import java.awt.Color;
 
+
+/**
+ * Represents the background with gridlines for the squares to exist on.
+ */
 public class Background extends GraphicsGroup {
     
-    double margin;
-    double x;
-    double y;
-    double length = 0;
+    private double margin;
+    private double x;
+    private double y;
     private CanvasWindow canvas;
     
+
+    /**
+     * Constructs the background on the specified canvas.
+     */
     public Background(CanvasWindow canvas) {
         this.canvas= canvas;
         this.margin = 40;
@@ -19,8 +26,11 @@ public class Background extends GraphicsGroup {
         this.y = canvas.getHeight()*0.068;
         this.draw();    
     }
-    public void draw() {
-        
+
+    /**
+     * Draws rectangles and squares that serve as the background for the 2048 game.
+     */
+    private void draw() {
         Rectangle background = new Rectangle(0,0,600,600);
         background.setFillColor(Color.darkGray);
         this.add(background);
@@ -36,8 +46,6 @@ public class Background extends GraphicsGroup {
                 x = margin;
                 y = y + 100 + margin;
             }
-            
-    }
-
-}
+        }
+    }   
 }
