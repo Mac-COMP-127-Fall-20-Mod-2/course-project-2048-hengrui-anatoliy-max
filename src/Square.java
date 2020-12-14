@@ -3,6 +3,7 @@ import java.awt.Color;
 import edu.macalester.graphics.FontStyle;
 import edu.macalester.graphics.GraphicsGroup;
 import edu.macalester.graphics.GraphicsText;
+import edu.macalester.graphics.Point;
 import edu.macalester.graphics.Rectangle;
 
 /**
@@ -94,37 +95,92 @@ public class Square extends GraphicsGroup {
      * within the bounds of the board and other squares.
      */
     public void move(String direction) {
-        if(direction.equals("Up")&&y>60&&squareManager.getElementAt(x,y-140)==null) {
-            y=y-140;
-            this.setCenter(x+50,y+50);
-            move("Up");
-        } 
-        else if(direction.equals("Down")&&y<=340&&squareManager.getElementAt(x,y+140)==null) {
-            y=y+140;
-            this.setCenter(x+50,y+50);
-            move("Down");
+        if(direction.equals("Up")&&y>60) {
+            if(testIntersection("Up")){
+                this.merge(new Point(x,y-140));
+            }
+            else{
+                squareManager.pointArrMap.replace(new Point(x,y),0);
+                y=y-140;
+                squareManager.pointArrMap.replace(new Point(x,y),value);
+                this.setCenter(x+50,y+50);
+                move("Up");
+            }
         }
-        else if(direction.equals("Left")&&x>40&&squareManager.getElementAt(x-140,y)==null) {
+        else if(direction.equals("Down")&&y<=340) {
+            if(testIntersection("Down")){
+                this.merge(new Point(x,y+140));
+            }
+            else{
+                squareManager.pointArrMap.replace(new Point(x,y),0);
+                y=y+140;
+                squareManager.pointArrMap.replace(new Point(x,y),value);
+                this.setCenter(x+50,y+50);
+                move("Down");
+            }
+        }
+        else if(direction.equals("Left")&&x>40) {
+            if(testIntersection("Left")){
+                this.merge(new Point(x-140,y));
+            }
+            else{
+            squareManager.pointArrMap.replace(new Point(x,y),0);
             x=x-140;
+            squareManager.pointArrMap.replace(new Point(x,y),value);
             this.setCenter(x+50,y+50);
             move("Left");
+            }
         }
-        else if(direction.equals("Right")&&x<=320&&squareManager.getElementAt(x+140,y)==null) {
-            x=x+140;
-            this.setCenter(x+50,y+50);
-            move("Right");
-        }
-        else{
-            //if can merge
-            //merge
+        else if(direction.equals("Right")&&x<=320&&!testIntersection("Right")) {
+            if(testIntersection("Right")){
+                this.merge(new Point(x+140,y));
+            }
+            else{
+                squareManager.pointArrMap.replace(new Point(x,y),0);
+                x=x+140;
+                squareManager.pointArrMap.replace(new Point(x,y),value);
+                this.setCenter(x+50,y+50);
+                move("Right");
+            }
         }
     }
 
     /**
      * Allows squares to merge with squares that they come into contact with.
      */
-    public void merge(){
-
+    public void merge(Point point){
+        if(this.getValue()==squareManager.pointArrMap.get(point)){
+            squareManager.squares.remove(this);
+            if(squareManager.getElementAt(point.getX(),point.getY())!=null){
+            squareManager.removeSquare(point);
+            }
+            squareManager.pointArrMap.replace(new Point(x,y), 0);
+            squareManager.pointArrMap.replace(point, this.doubleValue());//update the map
+            Square square = new Square(point.getX(),point.getY(),value,squareManager);
+            squareManager.add(square);
+        }
+    }
+    /**
+     * return false when there it bumps into something
+     * @param direction
+     * @return
+     */
+    private boolean testIntersection(String direction){
+        if(direction.equals("Up")&&squareManager.getElementAt(x,y-140)!=null) {
+            return true;
+        } 
+        else if(direction.equals("Down")&&squareManager.getElementAt(x,y+140)!=null) {
+            return true;
+        }
+        else if(direction.equals("Left")&&squareManager.getElementAt(x-140,y)!=null) {
+            return true;
+        }
+        else if(direction.equals("Right")&&squareManager.getElementAt(x+140,y)!=null) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -137,7 +193,12 @@ public class Square extends GraphicsGroup {
     /**
      * To be used when merging squares, makes the dominant square's value double.
      */
-    private void doubleValue() {
+    private int doubleValue() {
         this.value = value * 2;
+        return this.value;
+    }
+
+    public Point getPoint(){
+        return new Point(x,y);
     }
 }
