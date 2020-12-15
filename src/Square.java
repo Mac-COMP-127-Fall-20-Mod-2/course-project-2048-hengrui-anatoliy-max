@@ -95,7 +95,7 @@ public class Square extends GraphicsGroup {
      * within the bounds of the board and other squares.
      */
     public void move(String direction) {
-        if(direction.equals("Up")&&y>60) {
+        if(direction.equals("Up")&&y>60) { // change 60 to constant "max y"
             if(testIntersection("Up")){
                 this.merge(new Point(x,y-140));
             }
@@ -150,14 +150,15 @@ public class Square extends GraphicsGroup {
      */
     public void merge(Point point){
         if(this.getValue()==squareManager.pointArrMap.get(point)){
-            squareManager.squares.remove(this);
-            if(squareManager.getElementAt(point.getX(),point.getY())!=null){
+            squareManager.removeSquare(this.getPoint());
+            //if(squareManager.getElementAt(point.getX(),point.getY())!=null){
             squareManager.removeSquare(point);
-            }
+            //}
             squareManager.pointArrMap.replace(new Point(x,y), 0);
             squareManager.pointArrMap.replace(point, this.doubleValue());//update the map
             Square square = new Square(point.getX(),point.getY(),value,squareManager);
             squareManager.add(square);
+            squareManager.squares.add(square);
         }
     }
     /**

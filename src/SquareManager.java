@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -87,9 +88,25 @@ public class SquareManager extends GraphicsGroup{
      * Moves every square in the input string direction.
      */
     public void move(String direction){
-        for (Square square : squares){
-                square.move(direction);
-                }
+        // for (Square square : squares){
+        //         square.move(direction);
+        //         }
+        // squares.stream().forEach(s->s.move(direction));
+
+        // if the direction is up get columns
+
+        //for every row =1 save all the element in that row
+        ////row1 = (i,0), (i,1), (i,2) , (i,3)
+
+        // if the direction is left get rows
+         List<Square> todoSquares = new ArrayList<Square>(squares); 
+        do {
+            todoSquares.get(0).move(direction); // might return squares you checked
+            todoSquares.remove(0); // and make sure you remove any other squares you need to 
+        } while (!todoSquares.isEmpty())
+            // todoSquares.get(0).move(direction);
+            // todoSquares.remove(0);
+        ;
     }
         
 
@@ -108,7 +125,9 @@ public class SquareManager extends GraphicsGroup{
     public void removeSquare(Point point){
         for (Square square : squares) {
             if(square.getPoint()==point){
+                System.out.println("They are the same");
                 squares.remove(square);
+                this.remove(square);
             }
         }
     }
