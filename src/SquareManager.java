@@ -1,135 +1,146 @@
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import edu.macalester.graphics.CanvasWindow;
 import edu.macalester.graphics.GraphicsGroup;
 import edu.macalester.graphics.Point;
-import java.util.Map;
-import java.util.HashMap;
-
-import java.awt.Color;
 
 /**
  * Represents a square manager that can influence all squares.
  */
-public class SquareManager extends GraphicsGroup{
+public class SquareManager extends GraphicsGroup {
 
     private CanvasWindow canvas;
-    public List<Square> squares;
     private Random rand;
-    private boolean start;
-    private List<Point> points = List.of(new Point(40,461),new Point(40,321),new Point(40,181),new Point(40,41),new Point(180,41),new Point(180,181),new Point(180,321),new Point(180,461),new Point(320,461),new Point(320,321),new Point(320,181),new Point(320,41),new Point(460,41),new Point(460,181),new Point(460,321),new Point(460,461));
     // private int[][] arr = new int[4][4];
-    Map<Point,Integer> pointArrMap = new HashMap<>();
+    private Square[][] square;
+    final int target = 2048;
+    int highest;
+    int score;
 
     /**
      * Constructs a square maanager from a canvas window.
      */
-    public SquareManager(CanvasWindow canvas){
-        squares= new ArrayList<Square>();
+    public SquareManager(CanvasWindow canvas) {
+        square = new Square[4][4];
         rand = new Random();
-        start = true;
-        this.canvas=canvas;
-        // put values into point-array relationship map
-        pointArrMap.put(new Point(40,41),0);
-        pointArrMap.put(new Point(180,41),0);
-        pointArrMap.put(new Point(320,41),0);
-        pointArrMap.put(new Point(460,41),0);
-
-        pointArrMap.put(new Point(40,181),0);
-        pointArrMap.put(new Point(180,181),0);
-        pointArrMap.put(new Point(320,181),0);
-        pointArrMap.put(new Point(460,181),0);
-
-        pointArrMap.put(new Point(40,321),0);
-        pointArrMap.put(new Point(180,321),0);
-        pointArrMap.put(new Point(320,321),0);
-        pointArrMap.put(new Point(460,321),0);
-
-        pointArrMap.put(new Point(40,461),0);
-        pointArrMap.put(new Point(180,461),0);
-        pointArrMap.put(new Point(320,461),0);
-        pointArrMap.put(new Point(460,461),0);
+        highest = 0;
+        score = 0;
+        this.canvas = canvas;
+        generateSquare();
+        generateSquare();
     }
-
-
-    /**
-     * Generates squares randomly only in free spaces.
-     */
-    public void generate(){
-        if(start){
-            int firstRandom = rand.nextInt(16);
-            int secondRandom = rand.nextInt(16);
-            if(firstRandom == secondRandom) {
-                generate();
-            }
-        else{
-            generateSquare(points.get(firstRandom).getX(), points.get(firstRandom).getY(), 2);
-            generateSquare(points.get(secondRandom).getX(), points.get(secondRandom).getY(), 2);
-            start=false;
-            }
-        }
-        else if(squares.size()<16){
-            int randomNumber = rand.nextInt(16);
-            if(this.getElementAt(points.get(randomNumber)) != null){
-                generate();
-            }
-            else {
-                generateSquare(points.get(randomNumber).getX(), points.get(randomNumber).getY(), 2);
-            }
-        }
-    }
-
 
     /**
      * Moves every square in the input string direction.
      */
-    public void move(String direction){
-        // for (Square square : squares){
-        //         square.move(direction);
-        //         }
-        // squares.stream().forEach(s->s.move(direction));
+    public void move(int countDownFrom, int yChange, int xChange) {
+        boolean moved = false;
+        for (int i = 0; i < 16; i++) {
+            int j = Math.abs(countDownFrom - i);
+            int row = j / 4;
+            int col = j % 4;
+            if (square[row][col] == null)
+                continue;
+            int nextRow = row + yChange;
+            int nextCol = col + xChange;
 
-        // if the direction is up get columns
+            while (nextRow >= 0 && nextRow < 4 && nextCol >= 0 && nextCol < 4) {
+                Square next = square[nextRow][nextCol];
+                Square current = square[row][col];
 
-        //for every row =1 save all the element in that row
-        ////row1 = (i,0), (i,1), (i,2) , (i,3)
+                if (next == null) {
+                    square[nextRow][nextCol] = current;
+                    square[row][col] = null;
+                    row = nextRow;
+                    col = nextCol;
+                    nextRow += yChange;
+                    nextCol += xChange;
+                    moved = true;
 
-        // if the direction is left get rows
-         List<Square> todoSquares = new ArrayList<Square>(squares); 
-        do {
-            todoSquares.get(0).move(direction); // might return squares you checked
-            todoSquares.remove(0); // and make sure you remove any other squares you need to 
-        } while (!todoSquares.isEmpty())
-            // todoSquares.get(0).move(direction);
-            // todoSquares.remove(0);
-        ;
+                } else if (next.canMergeWith(current)) {
+                    int value = next.mergeWith(current);
+                    if (value > highest)
+                        highest = value;
+                    score += value;
+                    square[row][col] = null;
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+        if (moved) {
+            if (highest < 2048) {
+                clearMerged();
+                generateSquare();
+                // to see if you are dead
+            }
+        }
     }
-        
+
+    public void clearMerged() {
+        for (int i = 0; i < square[0].length; i++) {
+            for (int j = 0; j < square.length; j++) {
+                if (square[j][i] != null) {
+                    square[j][i].setMerged(false);
+                }
+            }
+        }
+    }
 
     /**
      * Generates a square at the input x, y, and value.
      */
-    private void generateSquare(double x, double y, int value) {
-        Square square = new Square(x, y, value,this);
-        pointArrMap.replace(new Point(x,y),value);
-        this.add(square);
-        squares.add(square);
+    public void generateSquare() {
+        int pos;
+        int row, col;
+        do {
+            pos = rand.nextInt(16);
+            row = pos / 4;
+            col = pos % 4;
+        } while (square[row][col] != null);
+        square[row][col] = new Square(2);
     }
-    /**
-     * remove square at certain point
-     */
-    public void removeSquare(Point point){
-        for (Square square : squares) {
-            if(square.getPoint()==point){
-                System.out.println("They are the same");
-                squares.remove(square);
-                this.remove(square);
+
+    public void reprint() {
+        this.removeAll();
+        Square[][] newSquare = new Square[4][4];
+        for (int i = 0; i < square.length; i++) {
+            for (int j = 0; j < square[0].length; j++) {
+                newSquare[i][j] = square[i][j];
             }
         }
+        System.out.println("Copy is done");
+        for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; col++) {
+        if (newSquare[col][row] != null) {
+            newSquare[col][row].createBoxDrawing(40+col*140,41+row*140);//by calling createBoxDrawing we add rectangle and text into the 2d square
+            this.add(newSquare[col][row]);
+        }
+        }
+        }
+
+        System.out.println("Print is done");  
+        printOutArray(newSquare);
     }
-    
+
+    public void printOutArray(Square[][] squares){
+        System.out.println("--------");
+        for(int y =0;y<squares[0].length;y++){
+            for(int x=0;x<squares.length;x++){
+                if(square[x][y]==null){
+                    System.out.print("0 ");
+                }
+                else{
+                    System.out.print(squares[x][y].getValue()+" ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("--------");
+    }
 }

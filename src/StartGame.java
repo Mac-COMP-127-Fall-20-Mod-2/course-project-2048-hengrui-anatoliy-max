@@ -24,32 +24,29 @@ public class StartGame {
         canvas.add(background);
         squareManager = new SquareManager(canvas);
         canvas.add(squareManager);
-        
+        squareManager.reprint();
+        run();
      }
 
     public static void main(String[] args) {
         StartGame game = new StartGame();
-        game.run();
     }
 
     /**
      * Handles running the game: animates the squares, and handles inputs.
      */
-    public void run() {
-        squareManager.generate();
-        canvas.draw();
+    public void run() {   
         canvas.onKeyDown(event -> {
             if(canvas.getKeysPressed().contains(Key.UP_ARROW)) {  
-            squareManager.move("Up");
+            squareManager.move(0, 0, -1);
             } else if (canvas.getKeysPressed().contains(Key.DOWN_ARROW)) {
-            squareManager.move("Down");
+            squareManager.move(15, 0, 1);
             } else if (canvas.getKeysPressed().contains(Key.RIGHT_ARROW)) {
-            squareManager.move("Right");
+            squareManager.move(15, 1, 0);
             } else if (canvas.getKeysPressed().contains(Key.LEFT_ARROW)) {
-            squareManager.move("Left");
+            squareManager.move(0, -1, 0);
             }
-            //squareManager.generate();
-            canvas.draw();   
+            squareManager.reprint();
         });
         
     }
