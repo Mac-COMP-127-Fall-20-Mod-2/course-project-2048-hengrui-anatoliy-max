@@ -9,7 +9,8 @@ import edu.macalester.graphics.Rectangle;
  * Represents a square that can be combined with other squares to reach the fabled 2048.
  */
 public class Square extends GraphicsGroup {
-//square is a graphics group we have array of square in the square array with only value that is needed
+    // square is a graphics group we have array of square in the square array with only value that is
+    // needed
     public static final int WIDTH = 100;
     public static final int HEIGHT = 100;
     public static final Color BEIGE_COLOR = new Color(224, 204, 177);
@@ -26,34 +27,31 @@ public class Square extends GraphicsGroup {
 
 
     /**
-     * Constructs a square from an x and y position, a value to be displayed, and a square manager
-     * to hold multiple squares. The square's color is determined based on its value.
+     * Constructs a square from a value that exists on the 2048 gameboard.
      */
     public Square(int value) {
         this.value = value;
-        this.merged =false;
+        this.merged = false;
     }
 
     /**
      * Creates a rectangle and number value based on the square's held value to graphically represent
-     * the box. The number's position stays centered no matter its value.
+     * the square. The number's position stays centered no matter its value and the color is changed
+     * based on the square's value.
      */
-    public void createBoxDrawing(int x,int y) {
+    public void createBoxDrawing(int x, int y) {
         this.removeAll();
         Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
         GraphicsText text = new GraphicsText(Integer.toString(value), 0, 0);
 
-        if(value == 2 || value == 4 || value == 8) {
+        if (value == 2 || value == 4 || value == 8) {
             text.setPosition(rectangle.getX() + 42, rectangle.getY() + 57);
-        }
-        else if(value == 16 || value == 32 || value == 64) {
+        } else if (value == 16 || value == 32 || value == 64) {
             text.setPosition(rectangle.getX() + 34, rectangle.getY() + 57);
 
-        }
-        else if(value == 128 || value == 256 || value == 512) {
+        } else if (value == 128 || value == 256 || value == 512) {
             text.setPosition(rectangle.getX() + 26, rectangle.getY() + 57);
-        }
-        else {
+        } else {
             text.setPosition(rectangle.getX() + 18, rectangle.getY() + 57);
         }
         text.setFont(FontStyle.BOLD, 25);
@@ -70,13 +68,13 @@ public class Square extends GraphicsGroup {
         if (value == 16) {
             this.color = DARK_ORANGE_COLOR;
         }
-        if(value == 32) {
+        if (value == 32) {
             this.color = RED_ORANGE_COLOR;
         }
-        if(value == 64) {
+        if (value == 64) {
             this.color = REDDER_ORANGE_COLOR;
         }
-        if(value >= 128) {
+        if (value >= 128) {
             this.color = GOLD_COLOR;
         }
         rectangle.setFillColor(color);
@@ -92,21 +90,35 @@ public class Square extends GraphicsGroup {
         return value;
     }
 
-    public boolean canMergeWith(Square square){
-        return !merged&&square!=null&&!square.merged&&value==square.getValue();
-}
+    /**
+     * If a given square is able to merge with a neighboring square, return true.
+     */
+    public boolean canMergeWith(Square square) {
+        return !merged && square != null && !square.merged && value == square.getValue();
+    }
 
-    public int mergeWith(Square square){
-        if(canMergeWith(square)) {
-            value*=2;
-            merged=true;
+    /**
+     * Doubles the value of the merging square.
+     */
+    public int mergeWith(Square square) {
+        if (canMergeWith(square)) {
+            value *= 2;
+            merged = true;
             return value;
         }
         return -1;
     }
 
-    public void setMerged(boolean b){
+    /**
+     * Sets the merged boolean according to the input boolean.
+     */
+    public void setMerged(boolean b) {
         merged = b;
+    }
+
+    @Override
+    public String toString() {
+        return "Square [color=" + color + ", merged=" + merged + ", value=" + value + "]";
     }
 
 }

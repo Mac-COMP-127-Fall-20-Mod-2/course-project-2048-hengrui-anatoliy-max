@@ -35,7 +35,8 @@ public class SquareManager extends GraphicsGroup {
     }
 
     /**
-     * Moves every square in the input string direction.
+     * Moves every square in the input string direction and allows merging between squares of the same
+     * value.
      */
     public void move(int countDownFrom, int yChange, int xChange) {
         boolean moved = false;
@@ -43,8 +44,9 @@ public class SquareManager extends GraphicsGroup {
             int j = Math.abs(countDownFrom - i);
             int row = j / 4;
             int col = j % 4;
-            if (square[row][col] == null)
+            if (square[row][col] == null) {
                 continue;
+            }
             int nextRow = row + yChange;
             int nextCol = col + xChange;
 
@@ -82,6 +84,10 @@ public class SquareManager extends GraphicsGroup {
         }
     }
 
+
+    /**
+     * Removes leftover squares after merging occurs.
+     */
     public void clearMerged() {
         for (int i = 0; i < square[0].length; i++) {
             for (int j = 0; j < square.length; j++) {
@@ -93,7 +99,7 @@ public class SquareManager extends GraphicsGroup {
     }
 
     /**
-     * Generates a square at the input x, y, and value.
+     * Generates a square at a free random position on the board.
      */
     public void generateSquare() {
         int pos;
@@ -106,6 +112,10 @@ public class SquareManager extends GraphicsGroup {
         square[row][col] = new Square(2);
     }
 
+
+    /**
+     * Refreshes the square layer so that the gameboard shows only the most updated squares.
+     */
     public void reprint() {
         this.removeAll();
         Square[][] newSquare = new Square[4][4];
@@ -116,31 +126,41 @@ public class SquareManager extends GraphicsGroup {
         }
         System.out.println("Copy is done");
         for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; col++) {
-        if (newSquare[col][row] != null) {
-            newSquare[col][row].createBoxDrawing(40+col*140,41+row*140);//by calling createBoxDrawing we add rectangle and text into the 2d square
-            this.add(newSquare[col][row]);
+            for (int col = 0; col < 4; col++) {
+                if (newSquare[col][row] != null) {
+                    newSquare[col][row].createBoxDrawing(40 + col * 140, 41 + row * 140);// by calling createBoxDrawing
+                                                                                         // we add rectangle and text
+                                                                                         // into the 2d square
+                    this.add(newSquare[col][row]);
+                }
+            }
         }
-        }
-        }
-
-        System.out.println("Print is done");  
+        System.out.println("Print is done");
         printOutArray(newSquare);
     }
 
-    public void printOutArray(Square[][] squares){
+
+    /**
+     * Prints the array that the gameboard is based on, allowing for ease of debugging.
+     */
+    public void printOutArray(Square[][] squares) {
         System.out.println("--------");
-        for(int y =0;y<squares[0].length;y++){
-            for(int x=0;x<squares.length;x++){
-                if(square[x][y]==null){
+        for (int y = 0; y < squares[0].length; y++) {
+            for (int x = 0; x < squares.length; x++) {
+                if (square[x][y] == null) {
                     System.out.print("0 ");
-                }
-                else{
-                    System.out.print(squares[x][y].getValue()+" ");
+                } else {
+                    System.out.print(squares[x][y].getValue() + " ");
                 }
             }
             System.out.println();
         }
         System.out.println("--------");
+    }
+
+    @Override
+    public String toString() {
+        return "SquareManager [canvas=" + canvas + ", highest=" + highest + ", rand=" + rand + ", score=" + score
+            + ", square=" + Arrays.toString(square) + ", target=" + target + "]";
     }
 }
