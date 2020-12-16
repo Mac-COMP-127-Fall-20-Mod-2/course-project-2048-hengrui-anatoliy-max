@@ -1,8 +1,6 @@
 
 import java.util.Arrays;
 import java.util.Random;
-
-import edu.macalester.graphics.CanvasWindow;
 import edu.macalester.graphics.GraphicsGroup;
 
 /**
@@ -18,6 +16,7 @@ public class SquareManager extends GraphicsGroup {
     int score;
     int highestScore;
     private boolean checkingAvailableMoves;
+    public String state = "notStarted";
 
     /**
      * Constructs a square maanager from a canvas window.
@@ -89,8 +88,11 @@ public class SquareManager extends GraphicsGroup {
                 clearMerged();
                 generateSquare();
                     if(!movesAvailable()){
-                        System.out.println("You are dead");
+                        state="over";
                     }
+            }
+            else if(highest == 2048){
+                state="won";
             }
         }
         return moved;
@@ -129,20 +131,22 @@ public class SquareManager extends GraphicsGroup {
      * Refreshes the square layer so that the gameboard shows only the most updated squares.
      */
     public void reprint() {
-        this.removeAll();
-        Square[][] newSquare = new Square[4][4];
-        for (int i = 0; i < square.length; i++) {
-            for (int j = 0; j < square[0].length; j++) {
-                newSquare[i][j] = square[i][j];
+        if(state.equals("running")){
+            this.removeAll();
+            Square[][] newSquare = new Square[4][4];
+            for (int i = 0; i < square.length; i++) {
+                for (int j = 0; j < square[0].length; j++) {
+                    newSquare[i][j] = square[i][j];
+                }
             }
-        }
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 4; col++) {
-                if (newSquare[col][row] != null) {
-                    newSquare[col][row].createBoxDrawing(40 + col * 140, 41 + row * 140);// by calling createBoxDrawing
-                                                                                         // we add rectangle and text
-                                                                                         // into the 2d square
-                    this.add(newSquare[col][row]);
+            for (int row = 0; row < 4; row++) {
+                for (int col = 0; col < 4; col++) {
+                    if (newSquare[col][row] != null) {
+                        newSquare[col][row].createBoxDrawing(40 + col * 140, 41 + row * 140);// by calling createBoxDrawing
+                                                                                            // we add rectangle and text
+                                                                                            // into the 2d square
+                        this.add(newSquare[col][row]);
+                    }
                 }
             }
         }

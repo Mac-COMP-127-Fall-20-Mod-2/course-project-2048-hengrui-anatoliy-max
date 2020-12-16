@@ -1,4 +1,5 @@
 import edu.macalester.graphics.*;
+import edu.macalester.graphics.Image;
 import edu.macalester.graphics.events.Key;
 
 /**
@@ -10,19 +11,19 @@ import edu.macalester.graphics.events.Key;
 public class StartGame {
     private static final int CANVAS_WIDTH = 800;
     private static final int CANVAS_HEIGHT = 600;
-
     private CanvasWindow canvas;
     private Background background;
-    SquareManager squareManager;
+    private SquareManager squareManager;
+    private Image startScreen = new Image(-50, -50, "title_screen.png");
+    private Image loseScreen = new Image(-50, -50, "lose_screen.png");
+    private Image winScreen = new Image(-50, -50, "win_screen.png");
 
 
     public StartGame() {
         canvas = new CanvasWindow("2048", CANVAS_WIDTH, CANVAS_HEIGHT);
         background = new Background(canvas);
-        canvas.add(background);
         squareManager = new SquareManager(background);
-        canvas.add(squareManager);
-        squareManager.reprint();
+        canvas.add(startScreen);
     }
 
     public static void main(String[] args) {
@@ -34,6 +35,28 @@ public class StartGame {
      * Handles running the game: handles inputs and reprints the screen for each input.
      */
     public void run() {
+        canvas.onClick(event -> {
+            if(squareManager.state.equals("notStarted")){
+                canvas.remove(startScreen);
+                canvas.add(background);
+                canvas.add(squareManager);
+                squareManager.state="running";
+                squareManager.reprint();
+            }
+            else if(squareManager.state.equals("over") || squareManager.state.equals("won")){
+                canvas.removeAll();
+                squareManager.removeAll();
+                squareManager.score=0;
+                squareManager.generateSquare();
+                squareManager.generateSquare();
+                squareManager.state="running";
+                squareManager.reprint();
+                canvas.add(squareManager);
+                canvas.add(background);
+                run();
+            }
+        });
+        
         canvas.onKeyDown(event -> {
             if (canvas.getKeysPressed().contains(Key.UP_ARROW)) {
                 squareManager.move(0, 0, -1);
@@ -44,7 +67,17 @@ public class StartGame {
             } else if (canvas.getKeysPressed().contains(Key.LEFT_ARROW)) {
                 squareManager.move(0, -1, 0);
             }
-            squareManager.reprint();
+            if(squareManager.state.equals("running")){
+                squareManager.reprint();
+            }
+            else if(squareManager.state.equals("over")){
+                canvas.removeAll();
+                canvas.add(loseScreen);
+            }
+            else if(squareManager.state.equals("won")){
+                canvas.removeAll();
+                canvas.add(winScreen);
+            }
         });
     }
 
