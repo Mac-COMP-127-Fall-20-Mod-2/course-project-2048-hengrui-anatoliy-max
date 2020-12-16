@@ -1,35 +1,33 @@
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import edu.macalester.graphics.CanvasWindow;
 import edu.macalester.graphics.GraphicsGroup;
-import edu.macalester.graphics.Point;
 
 /**
  * Represents a square manager that can influence all squares.
  */
 public class SquareManager extends GraphicsGroup {
 
-    private CanvasWindow canvas;
+    private Background background;
     private Random rand;
-    // private int[][] arr = new int[4][4];
     private Square[][] square;
     final int target = 2048;
     int highest;
     int score;
+    int highestScore;
+    private boolean checkingAvailableMoves;
 
     /**
      * Constructs a square maanager from a canvas window.
      */
-    public SquareManager(CanvasWindow canvas) {
+    public SquareManager(Background background) {
         square = new Square[4][4];
         rand = new Random();
         highest = 0;
         score = 0;
-        this.canvas = canvas;
+        this.background = background;
         generateSquare();
         generateSquare();
     }
@@ -38,7 +36,7 @@ public class SquareManager extends GraphicsGroup {
      * Moves every square in the input string direction and allows merging between squares of the same
      * value.
      */
-    public void move(int countDownFrom, int yChange, int xChange) {
+    public boolean move(int countDownFrom, int yChange, int xChange) {
         boolean moved = false;
         for (int i = 0; i < 16; i++) {
             int j = Math.abs(countDownFrom - i);
@@ -55,6 +53,9 @@ public class SquareManager extends GraphicsGroup {
                 Square current = square[row][col];
 
                 if (next == null) {
+                    if(checkingAvailableMoves){
+                        return true;
+                    }
                     square[nextRow][nextCol] = current;
                     square[row][col] = null;
                     row = nextRow;
@@ -64,10 +65,18 @@ public class SquareManager extends GraphicsGroup {
                     moved = true;
 
                 } else if (next.canMergeWith(current)) {
+                    if(checkingAvailableMoves){
+                        return true;
+                    }
                     int value = next.mergeWith(current);
                     if (value > highest)
                         highest = value;
                     score += value;
+                    background.updateScore(score, "currentScore");
+                    if (score>=highestScore){
+                        highestScore=score;
+                        background.updateScore(highestScore, "bestScore");
+                    }
                     square[row][col] = null;
                     break;
                 } else {
@@ -79,9 +88,12 @@ public class SquareManager extends GraphicsGroup {
             if (highest < 2048) {
                 clearMerged();
                 generateSquare();
-                // to see if you are dead
+                    if(!movesAvailable()){
+                        System.out.println("You are dead");
+                    }
             }
         }
+        return moved;
     }
 
 
@@ -124,7 +136,6 @@ public class SquareManager extends GraphicsGroup {
                 newSquare[i][j] = square[i][j];
             }
         }
-        System.out.println("Copy is done");
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 if (newSquare[col][row] != null) {
@@ -135,33 +146,19 @@ public class SquareManager extends GraphicsGroup {
                 }
             }
         }
-        System.out.println("Print is done");
-        printOutArray(newSquare);
     }
 
-
-    /**
-     * Prints the array that the gameboard is based on, allowing for ease of debugging.
-     */
-    public void printOutArray(Square[][] squares) {
-        System.out.println("--------");
-        for (int y = 0; y < squares[0].length; y++) {
-            for (int x = 0; x < squares.length; x++) {
-                if (square[x][y] == null) {
-                    System.out.print("0 ");
-                } else {
-                    System.out.print(squares[x][y].getValue() + " ");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println("--------");
+    boolean movesAvailable() {
+        checkingAvailableMoves = true;
+        boolean hasMoves = move(0, 0, -1) || move(15, 0, 1) || move(15, 1, 0) || move(0, -1, 0);
+        checkingAvailableMoves = false;
+        return hasMoves;
     }
-    ///eeeeddit
+
 
     @Override
     public String toString() {
-        return "SquareManager [canvas=" + canvas + ", highest=" + highest + ", rand=" + rand + ", score=" + score
+        return "highest=" + highest + ", rand=" + rand + ", score=" + score
             + ", square=" + Arrays.toString(square) + ", target=" + target + "]";
     }
 }
