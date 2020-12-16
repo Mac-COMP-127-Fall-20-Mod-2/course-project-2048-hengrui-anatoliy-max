@@ -157,6 +157,7 @@ public class SquareManager extends GraphicsGroup {
         }
         System.out.println("--------");
     }
+    ///eeeeddit
 
     @Override
     public String toString() {
