@@ -37,23 +37,19 @@ public class StartGame {
     public void run() {
         canvas.onClick(event -> {
             if(squareManager.state.equals("notStarted")){
-                canvas.remove(startScreen);
+                canvas.removeAll();
                 canvas.add(background);
                 canvas.add(squareManager);
                 squareManager.state="running";
                 squareManager.reprint();
             }
             else if(squareManager.state.equals("over") || squareManager.state.equals("won")){
-                canvas.removeAll();
-                squareManager.removeAll();
+                int oldHighScore = squareManager.highestScore;     
+                squareManager = new SquareManager(background);
                 squareManager.score=0;
-                squareManager.generateSquare();
-                squareManager.generateSquare();
-                squareManager.state="running";
-                squareManager.reprint();
-                canvas.add(squareManager);
-                canvas.add(background);
-                run();
+                squareManager.highestScore = oldHighScore;
+                background.updateScore(0, "currentScore");
+                run();       
             }
         });
         
