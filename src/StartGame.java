@@ -5,7 +5,12 @@ import edu.macalester.graphics.events.Key;
 /**
  * Group Name: Hengrui, Anatoliy, Max Description: The classic game 2048. Players move squares
  * around on the screen which can merge into a single box of the sum of their values when they
- * collide! Try to get the fabled 2048 square. References:
+ * collide! Try to get the fabled 2048 square. 
+ * 
+ * References:
+ * Correct use of 2D arrays, specifically related to moving and merging tiles: https://rosettacode.org/wiki/2048#Java
+ * Class structure: Previous homeworks (in particular HW3 and HW4)
+ * Game logic: https://2048.io
  * 
  */
 public class StartGame {

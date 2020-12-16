@@ -11,7 +11,7 @@ public class SquareManager extends GraphicsGroup {
     private Background background;
     private Random rand;
     private Square[][] square;
-    final int target = 128;
+    final int target = 2048;
     int highest;
     int score;
     int highestScore;
@@ -94,6 +94,9 @@ public class SquareManager extends GraphicsGroup {
             else if(highest == target){
                 state="won";
             }
+        }
+        else{
+            clearMerged();
         }
         return moved;
     }
