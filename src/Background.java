@@ -8,7 +8,7 @@ import java.awt.Color;
 
 
 /**
- * Represents the background with gridlines for the squares to exist on.
+ * Represents the background with gridlines for the squares and scoreboards to exist on.
  */
 public class Background extends GraphicsGroup {
 
@@ -97,10 +97,11 @@ public class Background extends GraphicsGroup {
         if(string.equals("bestScore")){
             bestScore.setText(Integer.toString(value));
         }
-    } 
-
+    }
+    
     @Override
     public String toString() {
-        return "Background [canvas=" + canvas + ", margin=" + margin + ", x=" + x + ", y=" + y + "]";
+        return "Background [bestScore=" + bestScore + ", canvas=" + canvas + ", currentScore=" + currentScore
+            + ", margin=" + margin + ", x=" + x + ", y=" + y + "]";
     }
 }

@@ -19,7 +19,7 @@ public class SquareManager extends GraphicsGroup {
     public String state = "notStarted";
 
     /**
-     * Constructs a square maanager from a canvas window.
+     * Constructs a square maanager from a canvas window and generates two starter squares on the screen.
      */
     public SquareManager(Background background) {
         square = new Square[4][4];
@@ -33,7 +33,7 @@ public class SquareManager extends GraphicsGroup {
 
     /**
      * Moves every square in the input string direction and allows merging between squares of the same
-     * value.
+     * value. Additionally handles changing the scoreboard's value.
      */
     public boolean move(int countDownFrom, int yChange, int xChange) {
         boolean moved = false;
@@ -155,17 +155,23 @@ public class SquareManager extends GraphicsGroup {
         }
     }
 
-    boolean movesAvailable() {
+
+    /**
+     * Handles checking for the game's losing condition: having all places on the grid filled and having no
+     * possible moves that can merge squares together.
+     */
+    public boolean movesAvailable() {
         checkingAvailableMoves = true;
         boolean hasMoves = move(0, 0, -1) || move(15, 0, 1) || move(15, 1, 0) || move(0, -1, 0);
         checkingAvailableMoves = false;
         return hasMoves;
     }
 
-
     @Override
     public String toString() {
-        return "highest=" + highest + ", rand=" + rand + ", score=" + score
-            + ", square=" + Arrays.toString(square) + ", target=" + target + "]";
+        return "SquareManager [background=" + background + ", checkingAvailableMoves=" + checkingAvailableMoves
+            + ", highest=" + highest + ", highestScore=" + highestScore + ", rand=" + rand + ", score=" + score
+            + ", square=" + Arrays.toString(square) + ", state=" + state + ", target=" + target + "]";
     }
+
 }

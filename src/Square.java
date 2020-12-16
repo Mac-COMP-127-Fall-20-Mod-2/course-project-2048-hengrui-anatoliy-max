@@ -6,10 +6,9 @@ import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.Rectangle;
 
 /**
- * Represents a square that can be combined with other squares to reach the fabled 2048.
+ * Represents a square that can be combined with other squares to reach the fabled 2048 square.
  */
 public class Square extends GraphicsGroup {
-//square is a graphics group we have array of square in the square array with only value that is needed
     public static final int WIDTH = 100;
     public static final int HEIGHT = 100;
     public static final Color BEIGE_COLOR = new Color(224, 204, 177);
@@ -24,10 +23,8 @@ public class Square extends GraphicsGroup {
     private Color color;
     private boolean merged;
 
-
     /**
-     * Constructs a square from an x and y position, a value to be displayed, and a square manager
-     * to hold multiple squares. The square's color is determined based on its value.
+     * Constructs a square from an int to be moved about the 2048 gameboard.
      */
     public Square(int value) {
         this.value = value;
@@ -36,7 +33,8 @@ public class Square extends GraphicsGroup {
 
     /**
      * Creates a rectangle and number value based on the square's held value to graphically represent
-     * the box. The number's position stays centered no matter its value.
+     * the square. The number's position stays centered no matter its value and the color changes based
+     * on the square's value.
      */
     public void createBoxDrawing(int x,int y) {
         this.removeAll();
@@ -92,10 +90,17 @@ public class Square extends GraphicsGroup {
         return value;
     }
 
+    /**
+     * Returns true if a given square is able to merge with another square of matching value.
+     */
     public boolean canMergeWith(Square square){
         return !merged && square!=null && !square.merged && value==square.getValue();
-}
+    }
 
+
+    /**
+     * Handles merging two squares together, creating a child square of the sum of the two squares' values.
+     */
     public int mergeWith(Square square){
         if(canMergeWith(square)) {
             value *= 2;
@@ -105,6 +110,9 @@ public class Square extends GraphicsGroup {
         return -1;
     }
 
+    /**
+     * Sets the merged boolean according to an input boolean.
+     */
     public void setMerged(boolean b){
         merged = b;
     }
@@ -113,6 +121,6 @@ public class Square extends GraphicsGroup {
     public String toString() {
         return "Square [color=" + color + ", merged=" + merged + ", value=" + value + "]";
     }
-
+    
 }
 

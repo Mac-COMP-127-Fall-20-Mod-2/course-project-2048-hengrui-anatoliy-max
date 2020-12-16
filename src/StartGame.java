@@ -37,7 +37,8 @@ public class StartGame {
     }
 
     /**
-     * Handles running the game: handles inputs and reprints the screen for each input.
+     * Handles running the game: listens for inputs and handles game logic. Allows the game to run for multiple game
+     * sessions, tracking an overall best score.
      */
     public void run() {
         canvas.onClick(event -> {
@@ -84,6 +85,7 @@ public class StartGame {
 
     @Override
     public String toString() {
-        return "StartGame [background=" + background + ", canvas=" + canvas + ", squareManager=" + squareManager + "]";
+        return "StartGame [background=" + background + ", canvas=" + canvas + ", loseScreen=" + loseScreen
+            + ", squareManager=" + squareManager + ", startScreen=" + startScreen + ", winScreen=" + winScreen + "]";
     }
 }
